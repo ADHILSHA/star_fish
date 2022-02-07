@@ -1,0 +1,81 @@
+.icon-title{
+    font-weight:500;
+}
+#app {
+    font-family: 'Poppins', sans-serif;
+  }
+  html{
+      overflow-y:auto !important;
+  }
+  .text-center{
+      text-align: center;
+  }
+  *{
+    text-transform: none !important;
+    }
+    .main-card{
+        background: #eeeeee;
+        border-radius:10px;
+    }
+    .review-card-item{
+        border-right:1px solid #eeeeee;
+    }
+    .b-right-0{
+        border-right:0px !important;
+    }
+.top-card{
+    border:1px solid #eeeeee;
+    width:100%;
+    height:100px;
+    margin-top:10px;
+    margin-left:-25px;
+    border-left:none;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    
+}
+.top-card-container{
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    
+    border-radius: 10px;
+    padding:20px;
+}
+.top-card-container:hover{
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+.review-row{
+    border-bottom:1px solid #eeeeee;
+}
+.sub-text{
+    font-size:12px;
+}
+.linear-progress-label{
+    float:right;
+    color:#808080;
+    font-size:14px;
+}
+.sort-options{
+    border: 1px solid #707070;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor:pointer;
+    
+}
+.sort-options-active{
+    border: 1px solid #707070;
+    background: $primary;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor:pointer;
+}
+.dropdown-menu{
+    padding:20px;
+    background:#ffffff;
+    max-width:500px;
+}
+.mt-pt-0{
+    margin-top:0px !important;
+    padding-top:0px !important;
+}
