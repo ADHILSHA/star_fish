@@ -101,6 +101,18 @@
 .avg-rating{
     z-index:2px;
 }
+.alert-msg{
+    padding:5px !important;
+    
+}
+.date-range-picker{
+    background:#ffffff;
+}
+.date-picker-btn{
+    background:#ffffff;
+    text-align: center;
+  padding-bottom:10px
+}
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
     .summary-card{

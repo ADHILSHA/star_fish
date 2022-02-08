@@ -4,10 +4,73 @@
    <v-container>
          
        <v-row>
+           <v-col
+      cols="12"
+      sm="6"
+      md="4"
+      offset-md="8"
+    >
+           <div class="mt-4 mb-4">
+              <v-menu
+               ref="menu"
+        v-model="date_global_menu"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        transition="scale-transition"
+        offset-y
+        min-width="auto"
+        class="mt-pt-0 date-range-picker"
+         
+       
+       
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-text-field
+          class="mt-pt-0"
+           v-model="dateRangeText"
+            label="Select Date Range"
+            prepend-icon="mdi-calendar"
+            readonly
+            v-bind="attrs"
+            v-on="on"
+            clearable
+            @click:clear="removeFilter()"
+          ></v-text-field>
+        </template>
+          <v-date-picker
+          v-model="dates"
+          range
+         
+         
+        
+        ></v-date-picker>
+        <v-spacer></v-spacer>
+        <div  class="date-picker-btn">
+          <v-btn
+            text
+            color="primary"
+            @click="date_global_menu = false"
+
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            text
+            color="primary"
+            @click="globalFilter()"
+          >
+            OK
+          </v-btn>
+        </div>
+       
+      </v-menu>
+          </div>
+           </v-col>
            <v-col cols="12">
             
       <div >
-        <div class="mt-4">
+          
+        <div >
           <h3>Review Summary</h3>
         </div>
         <summary-card :ratingCount="ratingCount" :averageRating="averageRating" :totalReviews="noOfReviews" :highestRating="highestRating()" :lowestRating="lowestRating()"/>
@@ -69,12 +132,13 @@
                </div>
            </div>
            <div class="text-right">
-                <v-btn color="primary black--text" v-if="sort_option.sort_by && sort_option.order" @click="sortReview()" :loading="sort_loading"> 
+                <v-btn color="primary black--text mt-4" v-if="sort_option.sort_by && sort_option.order" @click="sortReview()" :loading="sort_loading"> 
                Apply
            </v-btn>
            <v-btn color="primary black--text" disabled v-else>
                Apply
            </v-btn>
+           
            </div>
       </div>
     </v-menu>
@@ -183,18 +247,28 @@
               </v-col>
           </v-row>
            <div class="text-right">
+                 
                 <v-btn color="primary black--text" @click="applyFilter()" > 
                Apply
            </v-btn>
            <!-- <v-btn color="primary black--text" disabled v-else>
                Apply
            </v-btn> -->
+          
            </div>
           
       </div>
     </v-menu>
+    <div v-if="filter_applied">
+    <v-btn color="primary black--text"  class="ml-2 mt-4" small @click="clearFilter()">
+        <v-icon size="12" class="mr-2">mdi-autorenew</v-icon>
+              Clear Filter
+           </v-btn>
+    </div>
             </div>
+            <div v-if="parsed_data.length<1" class="text-center"> No Records Found</div>
           <v-row class="review-row " v-for="(review,index) in parsed_data" v-bind:key="index" v-bind:style="{ background: row_color[review]||'#ffffff',color:row_text_color[review]||'#000000' }">
+           
             <v-col md="3" cols="12">
                 <div class="d-flex">
                     <div>
@@ -270,6 +344,9 @@ export default {
   data() {
     return {
        date_menu:false,
+       filter_applied:false,
+       date_global_menu:false,
+       dates:[],
         shown:false,
     filter:{
         property:'',
@@ -382,6 +459,9 @@ export default {
   
   computed: {
     ...mapGetters(["allReviews","reviewRepo", "starRating","noOfReviews","noOfOneStarReviews","noOfTwoStarReviews","noOfThreeStarReviews","noOfFourStarReviews","noOfFiveStarReviews","ratingCount","averageRating"]),
+   dateRangeText () {
+        return this.dates.join(' ~ ')
+      },
   },
   
   mounted(){
@@ -406,8 +486,36 @@ export default {
   },
   
   methods: {
+       ...mapActions(["filterReviewsByDate","generateReviews"]),
+       clearFilter(){
+           this.current_data=[ ...this.allReviews ]
+           this.filter_applied=false
+           this.filter={
+        property:'',
+        condition:'',
+        value:''
+        }
+       },
+       removeFilter(){
+           this.generateReviews({data:this.reviewRepo,is_json:true})
+           this.current_data=[ ...this.allReviews ]
+       },
       beforereload(){
           console.log("Data will be lost if you leave the page, are you sure?")
+      },
+      globalFilter(){
+          this.date_global_menu=false
+          var to=moment(this.dates[1]+' 05:30:00','YYYY-MM-DD hh:mm:ss')
+          var to_date=parseInt(to/1000)
+          var from=moment(this.dates[0]+' 05:30:00','YYYY-MM-DD hh:mm:ss')
+          var from_date=parseInt(from/1000)
+          if(!to_date){
+              to_date=from_date
+          }
+          console.log("from date is"+from_date)
+          this.filterReviewsByDate({from:from_date,to:to_date})
+          this.current_data=[ ...this.allReviews ]
+          this.parsed_data=this.current_data.slice(0,5)
       },
       resetSearch(){
          if(!this.search_pattern)
@@ -504,6 +612,7 @@ export default {
                   this.current_data=[ ...this.allReviews ]
               }
               this.parsed_data=this.current_data.slice(0,5)
+              this.filter_applied=true
       },
     
       moment(date) {
@@ -645,21 +754,7 @@ export default {
          // var allData=this.$store.getters['allReviews']
           this.pageData=this.allReviews.slice(5,10)
       },
-    ...mapActions(["generateReviews"]),
-    async parseFile() {
-         console.log("i m inside the file uploader")
-      var reader = new FileReader();
-      var self = this;
-      // eslint-disable-next-line no-unused-vars
-      reader.onload = function (progressEvent) {
-        //Split By lines
-            console.log("i m inside the file uploader")
-        self.reviews = this.result.split("\n");
-        self.generateReviews(self.reviews);
-        //self.$store.dispatch('generateReviews',self.reviews)
-      };
-      reader.readAsText(this.file_item);
-    },
+    
   },
 };
 </script>

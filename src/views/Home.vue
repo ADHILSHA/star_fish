@@ -2,7 +2,7 @@
   <div class="home">
     <Header />
     <v-container>
-      <v-row >
+      <v-row>
         <v-col cols="12"> </v-col>
         <v-col md="6" cols="12">
           <div class="text-center mt-10">
@@ -14,7 +14,6 @@
               autoplay
               loop
             ></lottie-player>
-            <!-- <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_MeTWrj.json"  background="transparent"  speed="1"  style="width: 400px; height: 400px;"   autoplay loop></lottie-player> -->
           </div>
         </v-col>
 
@@ -29,31 +28,34 @@
           </div>
           <h2 class="mt-10">Get Started</h2>
           <div>
+              <!-- upload file  -->
             <v-file-input
               class="mt-4"
               v-model="file_item"
+              accept=".json"
               outlined
               dense
               show-size
               label="Upload your json file"
-              @change="parseFile()"
             ></v-file-input>
+             <!-- error message on uploading files   -->
+            <v-alert outlined type="error" class="alert-msg" v-if="err_msg">
+              {{ err_msg }}
+            </v-alert>
             <v-btn
               color="primary black--text"
               class="mt-2"
-              v-if="file_item"
+           
+              :disabled="file_item?false:true"
               dark
-              @click="analyseData()"
+              @click="parseFile()"
               >Continue</v-btn
             >
-            <v-btn color="primary black--text" class="mt-2" v-else disabled @click="analyseData()"
-              >Continue</v-btn
-            >
+           
           </div>
+           <!-- upload file  ends here-->
         </v-col>
       </v-row>
-
-    
     </v-container>
   </div>
 </template>
@@ -73,36 +75,57 @@ export default {
   },
   data() {
     return {
-      
       file_item: null,
-      
-     
+      reviews: [],
+      err_msg:''
     };
   },
-  
+
   computed: {
-    ...mapGetters(["allReviews", "starRating","noOfReviews","noOfOneStarReviews","noOfTwoStarReviews","noOfThreeStarReviews","noOfFourStarReviews","noOfFiveStarReviews","ratingCount"]),
+    ...mapGetters([
+      "allReviews",
+      "starRating",
+      "noOfReviews",
+      "noOfOneStarReviews",
+      "noOfTwoStarReviews",
+      "noOfThreeStarReviews",
+      "noOfFourStarReviews",
+      "noOfFiveStarReviews",
+      "ratingCount",
+    ]),
   },
-  
-  
-  mounted(){
-     
-  },
+
+  mounted() {},
   methods: {
-     
-      analyseData(){
-         this.$router.push('/reviews')
-      },
-     
     ...mapActions(["generateReviews"]),
+    checkJSON(data) {
+      try {
+        console.log("recieved json is" + JSON.stringify(data));
+        JSON.parse(data);
+      } catch {
+        return false;
+      }
+      return true;
+    },
     async parseFile() {
+      this.err_msg = "";
       var reader = new FileReader();
       var self = this;
       // eslint-disable-next-line no-unused-vars
       reader.onload = function (progressEvent) {
-        //Split By lines
-        self.reviews = this.result.split("\n");
-        self.generateReviews(self.reviews);
+        try {
+          //Split By lines
+          if (self.checkJSON(this.result)) {
+            self.reviews = JSON.parse(this.result);
+            self.generateReviews({ data: self.reviews, is_json: true });
+          } else {
+            self.reviews = this.result.split("\n");
+            self.generateReviews({ data: self.reviews, is_json: false });
+          }
+          self.$router.push("/reviews");
+        } catch {
+          self.err_msg = "Invalid JSON File";
+        }
       };
       reader.readAsText(this.file_item);
     },
