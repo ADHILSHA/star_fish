@@ -24,9 +24,8 @@
             Amazon review analysis tool for Amazon Sellers
           </h2>
           <div class="mt-4">
-            Star Fish review analyzer monitors reviews and provides
-            easy-to-understand sentiment analysis to improve your seller
-            performance. This means faster replies…and happier customers.
+            Star Fish review analyzer provides
+             a tool for companies to look at their Amazon reviews and find out what their users are saying. This means faster replies…and happier customers.
           </div>
           <h2 class="mt-10">Get Started</h2>
           <div>
