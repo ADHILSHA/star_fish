@@ -20,7 +20,7 @@
         </v-col>
 
         <v-col md="6" cols="12">
-          <h2 class="mt-10 pt-10">
+          <h2 class="home-title">
             Amazon review analysis tool for Amazon Sellers
           </h2>
           <div class="mt-4">
@@ -48,7 +48,7 @@
               color="primary black--text"
               class="mt-2"
            
-              :disabled="file_item?false:true"
+              :disabled="!file_item?true:false"
               dark
               @click="parseFile()"
               >Continue</v-btn

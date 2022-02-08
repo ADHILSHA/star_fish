@@ -3,6 +3,7 @@
           <v-row class="top-labels">
             <v-col md="12">
               <div class="summary-card mt-4">
+                  <!-- Progess circle showing the average rating-->
                 <div class="avg-rating">
                   <v-progress-circular
                     :rotate="90"
@@ -20,6 +21,8 @@
                  
                   </v-progress-circular>
                 </div>
+                 <!-- Progess circle ends here-->
+                 <!-- Review summary begins here-->
                 <div class="top-card">
                   <div class="summary-items">
                     <v-row >
@@ -65,19 +68,15 @@
                     </v-row>
                   </div>
                 </div>
+                <!-- Review summary ends here-->
               </div>
             </v-col>
           </v-row>
           <v-row>
             <v-col md="12">
+                <!--Linear progress card begins here-->
               <div
-                style="
-                  border: 1px solid #eeeeee;
-                  border-radius: 10px;
-                 
-                  width: 100%;
-                  padding: 10px;
-                "
+               class="star-linear-progress"
               >
                 <div class="mt-4">
                   <v-icon aria-hidden="false" color="primary">
@@ -167,17 +166,13 @@
                  
                 </div>
               </div>
+               <!--Linear progress card ends here-->
             </v-col>
           </v-row>
         </div>
 </template>
 <script>
-import {
-     // eslint-disable-next-line no-unused-vars
-  mapGetters,
-  // eslint-disable-next-line no-unused-vars
-  mapActions,
-} from "vuex";
+
 export default {
     data(){
         return {
@@ -186,10 +181,12 @@ export default {
     },
     methods:{
         getReviewPercent(no){
+            //to find percentage of star rating
           var percent=no/this.totalReviews
           return percent*100
       }
     },
     props:['ratingCount','averageRating','totalReviews','highestRating','lowestRating']
+    //definition of each props is given in Home page summary card component
 }
 </script>

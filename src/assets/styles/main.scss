@@ -122,8 +122,20 @@
     height: 400px; 
     max-width: 100%
 }
+.star-linear-progress{
+    border: 1px solid #eeeeee;
+    border-radius: 10px; 
+    width: 100%;
+    padding: 10px;
+}
+.home-title{
+    margin-top:100px;
+}
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
+    .home-title{
+        margin-top:10px;
+    }
     .lottie-anime{
         width: 200px; 
         height: 200px; 
