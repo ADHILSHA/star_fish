@@ -17,15 +17,20 @@
           <h3>All Reviews </h3>
         </div>
         <div class="top-card-container mt-4" v-if="loadData">
-            <div>
+           <v-row>
+               <v-col md="6" cols="8">
                 <v-text-field
-            outlined
-            label="Search here"
+            
+            label="Search by user, review summary or review text"
             prepend-inner-icon="mdi-magnify"
             v-model="search_pattern"
-            @input="searchReviews()"
+           @input="resetSearch()"
           ></v-text-field>
-            </div>
+               </v-col>
+               <v-col md="2" cols="2">
+          <v-btn color="primary black--text" class="mt-4"  @click="searchReviews()" :loading="search_loading">Search</v-btn>
+               </v-col>
+           </v-row>
             <div class="text-right mb-10">
                 
                <span class="mr-10"> {{current_data.length}} Results</span>
@@ -100,7 +105,7 @@
            </div>
            
           <v-row class="mt-2">
-              <v-col md="12">
+              <v-col  cols="12">
                 <b>  Review <span v-if="action=='highlight'">as</span></b><div v-if="action=='highlight'">
                        <v-select
                    v-model="selected_color"
@@ -119,7 +124,7 @@
           label="Select property"
         ></v-select>
               </v-col>
-               <v-col md="6">
+               <v-col md="6" cols="12">
                   <v-select
                   v-model="filter.condition"
                   item-text="name"
@@ -129,7 +134,7 @@
           class="mt-pt-0"
         ></v-select>
               </v-col>
-              <v-col md="6">
+              <v-col md="6" cols="12">
                   <v-select
                    v-model="filter.value"
           :items="ratings"
@@ -190,7 +195,7 @@
     </v-menu>
             </div>
           <v-row class="review-row " v-for="(review,index) in parsed_data" v-bind:key="index" v-bind:style="{ background: row_color[review]||'#ffffff',color:row_text_color[review]||'#000000' }">
-            <v-col md="3">
+            <v-col md="3" cols="12">
                 <div class="d-flex">
                     <div>
                          <v-avatar
@@ -214,7 +219,7 @@
                     </div>
                 </div>
             </v-col>
-             <v-col md="9">
+             <v-col md="9"  cols="12">
                 <div>
                     <b>{{reviewRepo[review].summary}}</b>
                 </div>
@@ -274,7 +279,7 @@ export default {
 
       file_item: null,
       reviews: [],
-      test: ['{"adhil":"0","rollno":"1"}'],
+      
       step: 0,
       parsed_data:[],
       pageData:[],
@@ -370,6 +375,7 @@ export default {
      row_text_color:{},
      selected_color:'',
      search_pattern:'',
+     search_loading:false
      
     };
   },
@@ -379,7 +385,9 @@ export default {
   },
   
   mounted(){
-   
+    if(this.noOfReviews<1){
+        this.$router.push('/')
+    }
       this.current_data=[ ...this.allReviews ]
      this.parsed_data=this.current_data.slice(0,5)
      this.loadData=true
@@ -388,13 +396,29 @@ export default {
   },
   created() {
     window.addEventListener("scroll", this.loadMoreData);
+     window.addEventListener('beforeunload', function(event) {
+         event.returnValue = 'Are you sure do you want to reload ?'
+      })
   },
   destroyed() {
     window.removeEventListener("scroll", this.loadMoreData);
+      window.removeEventListener("beforeunload", this.loadMoreData);
   },
   
   methods: {
+      beforereload(){
+          console.log("Data will be lost if you leave the page, are you sure?")
+      },
+      resetSearch(){
+         if(!this.search_pattern)
+          {
+                 this.current_data=[ ...this.allReviews ]
+                 this.parsed_data=this.current_data.slice(0,5)
+          }
+      },
       searchReviews(){
+          this.search_loading=true
+          this.current_data=[ ...this.allReviews ]
           if(this.search_pattern)
           {
           var result=this.search()
@@ -404,6 +428,7 @@ export default {
               this.current_data=[ ...this.allReviews ]
           }
           this.parsed_data=this.current_data.slice(0,5)
+          
       },
       search(){
           var pattern=this.search_pattern
@@ -411,22 +436,24 @@ export default {
   // isCaseSensitive: false,
   // includeScore: false,
   // shouldSort: true,
-  // includeMatches: false,
-  // findAllMatches: false,
+   includeMatches: true,
+   findAllMatches: true,
   // minMatchCharLength: 1,
   // location: 0,
-  // threshold: 0.6,
+   threshold: 0.3,
   // distance: 100,
   // useExtendedSearch: false,
   // ignoreLocation: false,
   // ignoreFieldNorm: false,
   // fieldNormWeight: 1,
   keys: [
+      "reviewerName",
     "reviewText",
     "summary"
   ]
 };
           const fuse = new Fuse(this.reviewRepo, options);
+          this.search_loading=false
           return fuse.search(pattern)
       },
       selectAction(action){

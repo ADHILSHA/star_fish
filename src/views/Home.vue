@@ -96,16 +96,13 @@ export default {
      
     ...mapActions(["generateReviews"]),
     async parseFile() {
-         console.log("i m inside the file uploader")
       var reader = new FileReader();
       var self = this;
       // eslint-disable-next-line no-unused-vars
       reader.onload = function (progressEvent) {
         //Split By lines
-            console.log("i m inside the file uploader")
         self.reviews = this.result.split("\n");
         self.generateReviews(self.reviews);
-        //self.$store.dispatch('generateReviews',self.reviews)
       };
       reader.readAsText(this.file_item);
     },

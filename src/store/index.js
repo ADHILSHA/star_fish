@@ -70,7 +70,6 @@ export default new Vuex.Store({
 },
   mutations: {
     SET_REVIEWS(state, payload) {
-      console.log("inside the mutation")
      state.rating_counter={
         1:0,
         2:0,
