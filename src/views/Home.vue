@@ -2,15 +2,17 @@
   <div class="home">
     <Header />
     <v-container>
+        <!-- Home page section begins here-->
       <v-row>
         <v-col cols="12"> </v-col>
         <v-col md="6" cols="12">
+             <!-- Lottie Animation-->
           <div class="text-center mt-10">
             <lottie-player
               src="https://assets2.lottiefiles.com/private_files/lf30_txmmovoe.json"
               background="transparent"
               speed="1"
-              style="width: 400px; height: 400px; max-width: 100%"
+             class="lottie-anime"
               autoplay
               loop
             ></lottie-player>
@@ -56,6 +58,7 @@
            <!-- upload file  ends here-->
         </v-col>
       </v-row>
+       <!-- Home page section ends here-->
     </v-container>
   </div>
 </template>
@@ -64,7 +67,7 @@
 import Header from "../components/Header.vue";
 
 import {
-  mapGetters,
+ 
   // eslint-disable-next-line no-unused-vars
   mapActions,
 } from "vuex";
@@ -82,32 +85,21 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
-      "allReviews",
-      "starRating",
-      "noOfReviews",
-      "noOfOneStarReviews",
-      "noOfTwoStarReviews",
-      "noOfThreeStarReviews",
-      "noOfFourStarReviews",
-      "noOfFiveStarReviews",
-      "ratingCount",
-    ]),
+    
   },
 
   mounted() {},
   methods: {
     ...mapActions(["generateReviews"]),
-    checkJSON(data) {
+    checkJSON(data) { //to check whether the data in table is JSON Format.
       try {
-        console.log("recieved json is" + JSON.stringify(data));
         JSON.parse(data);
       } catch {
         return false;
       }
       return true;
     },
-    async parseFile() {
+    async parseFile() { // Function to validate and convert line seperated file as proper json file.
       this.err_msg = "";
       var reader = new FileReader();
       var self = this;
@@ -116,18 +108,18 @@ export default {
         try {
           //Split By lines
           if (self.checkJSON(this.result)) {
-            self.reviews = JSON.parse(this.result);
-            self.generateReviews({ data: self.reviews, is_json: true });
+            self.reviews = JSON.parse(this.result);     //json string converted to json 
+            self.generateReviews({ data: self.reviews, is_json: true }); //Passing JSON file to action 'Generate Reviews'
           } else {
-            self.reviews = this.result.split("\n");
-            self.generateReviews({ data: self.reviews, is_json: false });
+            self.reviews = this.result.split("\n"); //result is splitted by lines and stored as array in reviews
+            self.generateReviews({ data: self.reviews, is_json: false }); //passed to action 'Generate reviews' as not json formatted
           }
-          self.$router.push("/reviews");
+          self.$router.push("/reviews"); //go to reviews page
         } catch {
-          self.err_msg = "Invalid JSON File";
+          self.err_msg = "Invalid JSON File"; 
         }
       };
-      reader.readAsText(this.file_item);
+      reader.readAsText(this.file_item); 
     },
   },
 };

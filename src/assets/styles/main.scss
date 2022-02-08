@@ -14,7 +14,7 @@
     text-transform: none !important;
     }
     .main-card{
-        background: #eeeeee;
+        background: $border;
         border-radius:10px;
     }
     .review-card-item{
@@ -25,7 +25,7 @@
         border-right:0px !important;
     }
 .top-card{
-    border:1px solid #eeeeee;
+    border:1px solid $border;
     width:100%;
     height:100px;
     margin-top:10px;
@@ -49,6 +49,7 @@
 }
 .sub-text{
     font-size:12px;
+    color:$secondary;
 }
 .linear-progress-label{
     float:right;
@@ -56,7 +57,7 @@
     font-size:14px;
 }
 .sort-options{
-    border: 1px solid #707070;
+    border: 1px solid $secondary;
     padding: 5px;
     border-radius: 5px;
     font-size: 14px;
@@ -64,7 +65,7 @@
     
 }
 .sort-options-active{
-    border: 1px solid #707070;
+    border: 1px solid $secondary;
     background: $primary;
     padding: 5px;
     border-radius: 5px;
@@ -90,11 +91,11 @@
     }
 }
 .summary-item{
-    border-right:1px solid #eeeeee;
+    border-right:1px solid $border;
 }
 .avg-rating-content{
     font-size:12px;
-    color:#707070;
+    color:$secondary;
     top:30px;
     position:absolute
 }
@@ -113,15 +114,29 @@
     text-align: center;
   padding-bottom:10px
 }
+.mh-65{
+    max-height:65px;
+}
+.lottie-anime{
+    width: 400px; 
+    height: 400px; 
+    max-width: 100%
+}
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
+    .lottie-anime{
+        width: 200px; 
+        height: 200px; 
+        max-width: 100%;
+        margin: auto;
+    }
     .summary-card{
         display: block;
     }
     .summary-items{
         margin-left:0px;
         .last-item{
-            border-right:1px solid #eeeeee;
+            border-right:1px solid $border;
         }
         
     }
@@ -133,7 +148,7 @@
         min-height: 500px;
     }
     .review-card-item {
-        border: 1px solid #eeeeee;
+        border: 1px solid $border;
         padding:5px;
         border-radius:5px
     }

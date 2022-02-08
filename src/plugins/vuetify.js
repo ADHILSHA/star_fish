@@ -7,7 +7,7 @@ export default new Vuetify({
     theme: {
         themes: {
           light: {
-            primary: '#febd68', // #E53935
+            primary: '#febd68', // primary color
             
           },
         },
